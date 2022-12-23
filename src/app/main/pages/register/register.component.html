@@ -1,0 +1,176 @@
+<div class="surface-ground flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden">
+    <div class="flex flex-column align-items-center justify-content-center">
+        <!--        <img src="assets/layout/images/{{layoutService.config.colorScheme === 'light' ? 'logo-dark' : 'logo-white'}}.svg" alt="Sakai logo" class="mb-5 w-6rem flex-shrink-0">-->
+        <div
+            style="border-radius:56px; padding:0.3rem; background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%);">
+            <div class="w-full surface-card py-8 px-5 sm:px-8" style="border-radius:53px">
+                <div class="text-center mb-5">
+                    <div class="text-900 text-3xl font-medium mb-3">User Management</div>
+                    <span class="text-600 font-medium">Register to continue</span>
+                </div>
+                <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+                    <div class="grid p-fluid">
+                        <div class="col-6">
+                            <label for="firstName" class="block text-900 text-xl font-medium mb-2 ml-2">First
+                                Name</label>
+                            <span class="p-input-icon-left">
+                              <i class="pi pi-user text-white"></i>
+                              <input type="text" pInputText formControlName="firstName" id="firstName"
+                                     class="appearance-none block bg-white-alpha-10 text-white-alpha-60"
+                                     placeholder="First Name" style="border-radius: 30px">
+                            </span>
+                            <div class="ml-2"
+                                 *ngIf="registerForm.controls['firstName'].errors && registerForm.controls['firstName'].dirty">
+                                <div *ngIf="registerForm.hasError('required','firstName')">
+                                    <small class="p-error">First name is required.</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="lastName" class="block text-900 text-xl font-medium mb-2 ml-2">Last Name</label>
+                            <input type="text" pInputText formControlName="lastName" id="lastName"
+                                   class="appearance-none  outline-none block bg-white-alpha-10 text-white-alpha-60"
+                                   placeholder="Last Name"
+                                   style="border-radius: 30px">
+                            <div class="" *ngIf="registerForm.controls['lastName'].errors &&
+                                                 registerForm.controls['lastName'].dirty">
+                                <div *ngIf="registerForm.hasError('required','lastName')">
+                                    <small class="p-error">Last name is required.</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label for="username" class="block text-900 text-xl font-medium mb-2 ml-2">Username</label>
+                            <span class="p-input-icon-left">
+                              <i class="pi pi-verified text-white"></i>
+                              <input type="text" pInputText formControlName="username" id="username"
+                                     class="appearance-none  outline-none block bg-white-alpha-10 text-white-alpha-60"
+                                     placeholder="Username"
+                                     style="border-radius: 30px">
+                            </span>
+                            <div
+                                *ngIf="registerForm.controls['username'].errors && registerForm.controls['username'].dirty">
+                                <div *ngIf="registerForm.hasError('required','username')">
+                                    <small class="p-error">Username is required.</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label for="email" class="block text-900 text-xl font-medium mb-2 ml-2">Email</label>
+                            <span class="p-input-icon-left">
+                              <i class="pi pi-envelope text-white"></i>
+                              <input type="text" pInputText formControlName="email" id="email"
+                                     class="appearance-none outline-none block bg-white-alpha-10 text-white-alpha-60"
+                                     placeholder="Email"
+                                     style="border-radius: 30px">
+                            </span>
+                            <div class="ml-2" *ngIf="registerForm.controls['email'].errors &&
+                                                 registerForm.controls['email'].dirty">
+                                <div *ngIf="registerForm.hasError('required','email')">
+                                    <small class="p-error">Email is required.</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p-messages [(value)]="authMessage" [enableService]="false"></p-messages>
+                    <button pButton pRipple type="submit" label="Register" class="w-full p-3 text-xl"></button>
+                </form>
+
+                <div class="flex align-items-center justify-content-center p-5 gap-5">
+                    <a class="font-medium text-500 no-underline ml-2 text-right"
+                    >Already have an account?
+                        <a class="no-underline" style="color: var(--primary-color)"
+                           routerLink="/login"> Sign In </a>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<div class="flex align-items-center min-h-screen justify-content-center"-->
+<!--     style="background:linear-gradient(-225deg,#ac32e4,#7918f2 48%,#4801ff)">-->
+<!--  <div class="p-6 shadow-2 lg:w-30rem"-->
+<!--       style="border-radius: 12px;background-color: rgba(255,255,255,.1);color: rgba(255,255,255,.8)">-->
+<!--    <div class="text-4xl text-center font-medium mb-6">User Management Portal</div>-->
+<!--    <form [formGroup]="registerForm" (ngSubmit)="onRegister()">-->
+<!--      <div class="grid p-fluid">-->
+<!--        <div class="col-6">-->
+<!--        <span class="p-input-icon-left">-->
+<!--          <i class="pi pi-user text-white"></i>-->
+<!--          <input type="text" pInputText formControlName="firstName"-->
+<!--                 class="appearance-none outline-none block bg-white-alpha-10 text-white-alpha-60"-->
+<!--                 placeholder="First Name"-->
+<!--                 style="border-radius: 30px">-->
+<!--        </span>-->
+<!--          <div class="mt-2" *ngIf="registerForm.controls['firstName'].errors && (registerForm.controls['firstName'].touched ||-->
+<!--                                       registerForm.controls['firstName'].dirty)">-->
+<!--            <div *ngIf="registerForm.hasError('required','firstName')">-->
+<!--              <label>First name is required.</label>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="col-6">-->
+<!--          <input type="text" pInputText formControlName="lastName"-->
+<!--                 class="appearance-none  outline-none block bg-white-alpha-10 text-white-alpha-60"-->
+<!--                 placeholder="Last Name"-->
+<!--                 style="border-radius: 30px">-->
+<!--          <div class="mt-2" *ngIf="registerForm.controls['lastName'].errors && (registerForm.controls['lastName'].touched ||-->
+<!--                                                 registerForm.controls['lastName'].dirty)">-->
+<!--            <div *ngIf="registerForm.hasError('required','lastName')">-->
+<!--              <label>Last name is required.</label>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="col-12">-->
+<!--        <span class="p-input-icon-left">-->
+<!--          <i class="pi pi-verified text-white"></i>-->
+<!--          <input type="text" pInputText formControlName="username"-->
+<!--                 class="appearance-none  outline-none block bg-white-alpha-10 text-white-alpha-60"-->
+<!--                 placeholder="Username"-->
+<!--                 style="border-radius: 30px">-->
+<!--        </span>-->
+<!--          <div class="mt-2" *ngIf="registerForm.controls['username'].errors && (registerForm.controls['username'].touched ||-->
+<!--                                                 registerForm.controls['username'].dirty)">-->
+<!--            <div *ngIf="registerForm.hasError('required','username')">-->
+<!--              <label>Username is required.</label>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="col-12">-->
+<!--        <span class="p-input-icon-left">-->
+<!--          <i class="pi pi-envelope text-white"></i>-->
+<!--          <input type="text" pInputText formControlName="email"-->
+<!--                 class="appearance-none  outline-none block bg-white-alpha-10 text-white-alpha-60"-->
+<!--                 placeholder="Email"-->
+<!--                 style="border-radius: 30px">-->
+<!--        </span>-->
+<!--          <div class="mt-2" *ngIf="registerForm.controls['email'].errors && (registerForm.controls['email'].touched ||-->
+<!--                                                 registerForm.controls['email'].dirty)">-->
+<!--            <div *ngIf="registerForm.hasError('required','email')">-->
+<!--              <label>Email is required.</label>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="col-12">-->
+<!--          <p-messages [(value)]="authMessage" [enableService]="false"></p-messages>-->
+<!--          <div class="text-center">-->
+<!--            <button type="submit" pButton label="Register" [loading]="isLoadingRegister"-->
+<!--                    [disabled]="registerForm.invalid"-->
+<!--                    class="appearance-none border-none p-3 w-full outline-none text-xl mb-4 font-medium w-10rem bg-white-alpha-30-->
+<!--            hover:bg-white-alpha-40 active:bg-white-alpha-20 text-white-alpha-80 cursor-pointer transition-colors-->
+<!--             transition-duration-150"-->
+<!--                    style="border-radius: 30px">-->
+<!--            </button>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <label class="font-medium block text-center">Already have an account?-->
+<!--        <a class="no-underline text-500"-->
+<!--           routerLink="/login"> Sign In </a>-->
+<!--      </label>-->
+<!--    </form>-->
+<!--  </div>-->
+<!--</div>-->
+

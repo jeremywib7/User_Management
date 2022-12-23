@@ -17,35 +17,53 @@ export class AppMenuComponent implements OnInit {
         this.model = [
             {
                 label: 'Home',
-                items: [
-                    {label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/']}
+                children: [
+                    {
+                        label: 'Dashboard',
+                        icon: 'pi pi-fw pi-home',
+                        routerLink: '/'
+                    }
                 ]
             },
             {
                 label: 'Menu',
-                items: [
+                children: [
                     {
-                        label: 'User',
-                        icon: 'pi pi-fw pi-user',
-                        routerLink: ['/pages/user/management']
-                    }]
+                        label: 'Report', icon: 'pi pi-fw pi-chart-line',
+                    },
+                    {
+                        label: 'Master', icon: 'pi pi-fw pi-cog',
+                        children: [
+                            {
+                                label: 'User',
+                                icon: 'pi pi-fw pi-user',
+                                routerLink: '/pages/user/management'
+                            },
+                            {
+                                label: 'Menu',
+                                icon: 'pi pi-fw pi-list',
+                                routerLink: ['/pages/menu']
+                            },
+                        ]
+                    },
+                ]
             },
             {
                 label: 'Pages',
-                items: [
+                children: [
                     {
                         label: 'Landing',
                         icon: 'pi pi-fw pi-globe',
-                        routerLink: ['/landing']
+                        routerLink: '/landing'
                     },
                     {
                         label: 'Auth',
                         icon: 'pi pi-fw pi-user',
-                        items: [
+                        children: [
                             {
                                 label: 'Login',
                                 icon: 'pi pi-fw pi-sign-in',
-                                routerLink: ['/auth/login']
+                                routerLink: '/auth/login'
                             },
                             {
                                 label: 'Error',
@@ -83,13 +101,13 @@ export class AppMenuComponent implements OnInit {
             },
             {
                 label: 'Hierarchy',
-                items: [
+                children: [
                     {
                         label: 'Submenu 1', icon: 'pi pi-fw pi-bookmark',
-                        items: [
+                        children: [
                             {
                                 label: 'Submenu 1.1', icon: 'pi pi-fw pi-bookmark',
-                                items: [
+                                children: [
                                     {label: 'Submenu 1.1.1', icon: 'pi pi-fw pi-bookmark'},
                                     {label: 'Submenu 1.1.2', icon: 'pi pi-fw pi-bookmark'},
                                     {label: 'Submenu 1.1.3', icon: 'pi pi-fw pi-bookmark'},
@@ -97,7 +115,7 @@ export class AppMenuComponent implements OnInit {
                             },
                             {
                                 label: 'Submenu 1.2', icon: 'pi pi-fw pi-bookmark',
-                                items: [
+                                children: [
                                     {label: 'Submenu 1.2.1', icon: 'pi pi-fw pi-bookmark'}
                                 ]
                             },
@@ -105,17 +123,17 @@ export class AppMenuComponent implements OnInit {
                     },
                     {
                         label: 'Submenu 2', icon: 'pi pi-fw pi-bookmark',
-                        items: [
+                        children: [
                             {
                                 label: 'Submenu 2.1', icon: 'pi pi-fw pi-bookmark',
-                                items: [
+                                children: [
                                     {label: 'Submenu 2.1.1', icon: 'pi pi-fw pi-bookmark'},
                                     {label: 'Submenu 2.1.2', icon: 'pi pi-fw pi-bookmark'},
                                 ]
                             },
                             {
                                 label: 'Submenu 2.2', icon: 'pi pi-fw pi-bookmark',
-                                items: [
+                                children: [
                                     {label: 'Submenu 2.2.1', icon: 'pi pi-fw pi-bookmark'},
                                 ]
                             },
