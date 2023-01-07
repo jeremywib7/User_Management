@@ -50,13 +50,13 @@ export class RegisterComponent implements OnInit {
 
         this.isLoadingRegister = true;
         try {
-            const login: HttpResponse<User> = await firstValueFrom(this.authenticationService.register(this.registerForm.value));
+            const login: User = await firstValueFrom(this.authenticationService.register(this.registerForm.value));
             this.messageService.add({
                 severity: 'success',
                 summary: 'Account Created',
                 detail: 'Please check your email for password to login'
             });
-            await this.router.navigateByUrl('/pages/user/management');
+            await this.router.navigateByUrl('/login');
             this.isLoadingRegister = false;
         } catch (error) {
             this.authMessage = [{severity: 'error', detail: error.error.message}];

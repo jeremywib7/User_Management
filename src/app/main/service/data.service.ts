@@ -26,9 +26,9 @@ export class DataService {
                 profileImageUrl: 'john/john.jpg',
                 lastLoginDateDisplay: new Date((new Date()).getTime() - 24 * 60 * 60 * 1000),
                 authorities: ['user:create','user:read','user:update','user:delete'],
-                isActive: true,
+                active: true,
                 joinDate: new Date((new Date()).getTime() - 24 * 60 * 60 * 1000),
-                isNotLocked: true
+                notLocked: true
             },
             {
                 id: 2,
@@ -42,9 +42,9 @@ export class DataService {
                 profileImageUrl: 'maria',
                 lastLoginDateDisplay: new Date((new Date()).getTime() - 24 * 60 * 60 * 1000),
                 authorities: ['user:read'],
-                isActive: false,
+                active: false,
                 joinDate: new Date((new Date()).getTime() - 24 * 60 * 60 * 1000),
-                isNotLocked: true
+                notLocked: true
             },
         ];
 

@@ -15,6 +15,7 @@ import {AuthenticationGuard} from "./main/guard/authentication.guard";
 import {AuthenticationService} from "./main/service/authentication.service";
 import {HTTP_INTERCEPTORS} from "@angular/common/http";
 import {AuthInterceptor} from "./main/interceptor/auth.interceptor";
+import {MessageService} from "primeng/api";
 
 @NgModule({
     declarations: [
@@ -26,6 +27,7 @@ import {AuthInterceptor} from "./main/interceptor/auth.interceptor";
     providers: [
         AuthenticationGuard,
         AuthenticationService,
+        MessageService,
         {
             provide: HTTP_INTERCEPTORS,
             useClass: AuthInterceptor,

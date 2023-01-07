@@ -16,6 +16,8 @@ import {DataService} from "../../service/data.service";
 import {AutoFocusModule} from "primeng/autofocus";
 import {FormService} from "../../service/form.service";
 import {UserService} from "../../service/user.service";
+import {TooltipModule} from "primeng/tooltip";
+import {MessageHelperService} from "../../service/message-helper.service";
 
 @NgModule({
   declarations: [UserComponent],
@@ -31,10 +33,11 @@ import {UserService} from "../../service/user.service";
         DropdownModule,
         RippleModule,
         InputTextModule,
-        AutoFocusModule
+        AutoFocusModule,
+        TooltipModule
     ],
     providers: [
-        MessageService,
+        MessageHelperService,
         UserService,
         FormService,
         DataService

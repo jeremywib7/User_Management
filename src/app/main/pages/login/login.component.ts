@@ -10,6 +10,8 @@ import {HeaderType} from "../../enum/header-type.enum";
 import {LayoutService} from "../../../layout/service/app.layout.service";
 import {FormService} from "../../service/form.service";
 import {User} from "../../model/user";
+import {Title} from "@angular/platform-browser";
+import {environment} from "../../../../environments/environment";
 
 @Component({
     selector: 'app-login',
@@ -17,7 +19,7 @@ import {User} from "../../model/user";
     styles: [`
         :host ::ng-deep .pi-eye,
         :host ::ng-deep .pi-eye-slash {
-            transform:scale(1.6);
+            transform: scale(1.6);
             margin-right: 1rem;
             color: var(--primary-color) !important;
         }
@@ -32,14 +34,17 @@ export class LoginComponent implements OnInit {
     public isLoadingSignIn: boolean = false;
     public authMessage: Message[];
     public loginForm: FormGroup;
+    public appName = environment.appname;
 
     constructor(
         public authenticationService: AuthenticationService,
         public layoutService: LayoutService,
         private formService: FormService,
+        private title: Title,
         private router: Router,
         private fb: FormBuilder
     ) {
+        this.title.setTitle("Login | " + this.appName);
         this.loginForm = this.fb.group({
             username: ['', [RxwebValidators.required()]],
             password: ['', [RxwebValidators.required()]]
@@ -59,7 +64,7 @@ export class LoginComponent implements OnInit {
 
         this.isLoadingSignIn = true;
         try {
-            const login : HttpResponse<User>  = await firstValueFrom(this.authenticationService.login(this.loginForm.value));
+            const login: HttpResponse<User> = await firstValueFrom(this.authenticationService.login(this.loginForm.value));
             const token = login.headers.get(HeaderType.JWT_TOKEN);
             this.authenticationService.saveToken(token);
             this.authenticationService.addUserToLocalCache(login.body);
@@ -69,5 +74,9 @@ export class LoginComponent implements OnInit {
             this.authMessage = [{severity: 'error', detail: error.error.message}];
             this.isLoadingSignIn = false;
         }
+    }
+
+    public async onEdit(): Promise<void> {
+
     }
 }

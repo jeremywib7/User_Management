@@ -2,10 +2,9 @@ import {Component, OnInit} from '@angular/core';
 import {User} from "../../model/user";
 import {StringDropdown} from "../../model/string-dropdown";
 import {BooleanDropdown} from "../../model/boolean-dropdown";
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
 import {environment} from "../../../../environments/environment";
 import {AuthenticationService} from "../../service/authentication.service";
-import {MessageService} from "primeng/api";
 import {UserService} from "../../service/user.service";
 import {Title} from "@angular/platform-browser";
 import {RxwebValidators} from "@rxweb/reactive-form-validators";
@@ -13,6 +12,7 @@ import {firstValueFrom} from "rxjs";
 import {Router} from "@angular/router";
 import {DataService} from "../../service/data.service";
 import {FormService} from "../../service/form.service";
+import {MessageHelperService} from "../../service/message-helper.service";
 
 @Component({
     selector: 'app-user',
@@ -21,22 +21,24 @@ import {FormService} from "../../service/form.service";
 })
 export class UserComponent implements OnInit {
 
-    public selectedUsers: User[];
-    public selectedUser: User;
-    public roles: StringDropdown[];
+    public selectedUsers: User[] = [];
+    public selectedUser: User = new User();
+    public roles: StringDropdown[] = this.dataService.roles;
+    private currentUsername: string;
     public users: User[];
     public actives: BooleanDropdown[] = this.dataService.actives;
     public userForm: FormGroup;
-    public isRefreshUsers: boolean;
-    public showFormDialog: boolean
-    public showInfoDialog: boolean;
+    public isRefreshUsers: boolean = false;
+    public showFormDialog: boolean = false;
+    public showInfoDialog: boolean = false;
     public appName = environment.appname;
     public profileImage: File;
+    public editMode: boolean = false;
 
     constructor(
         private authenticationService: AuthenticationService,
-        private messageService: MessageService,
         private formService: FormService,
+        private messageHelperService: MessageHelperService,
         private userService: UserService,
         private dataService: DataService,
         private router: Router,
@@ -53,7 +55,7 @@ export class UserComponent implements OnInit {
             username: ['', RxwebValidators.required()],
             email: ['', RxwebValidators.required()],
             role: ['', RxwebValidators.required()],
-            isActive: ['', RxwebValidators.required()],
+            active: ['', RxwebValidators.required()],
         });
     }
 
@@ -61,11 +63,7 @@ export class UserComponent implements OnInit {
         try {
             this.users = await this.getUsers(false);
         } catch (error) {
-            this.messageService.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: error.error.message
-            });
+            this.messageHelperService.showToast('error', 'Error', error.error.message);
         }
     }
 
@@ -81,19 +79,14 @@ export class UserComponent implements OnInit {
             this.users = user;
             this.isRefreshUsers = false;
             if (showNotification) {
-                this.messageService.add({
-                    severity: 'success',
-                    detail: `${user.length} user(s) loaded successfully.`
-                });
+                this.messageHelperService.showToast('error', 'Error',
+                    `${user.length} user(s) loaded successfully.`);
                 this.isRefreshUsers = false;
             }
             return user;
         } catch (error) {
-            this.messageService.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: error.error.message
-            });
+            this.messageHelperService.showToast('error', 'Error',
+                error.error.message);
             return null;
         }
     }
@@ -123,32 +116,49 @@ export class UserComponent implements OnInit {
 
     }
 
-    public async onAddNewUser(): Promise<void> {
-        if (this.userForm.invalid) {
-            return this.formService.validateFormFields(this.userForm, null);
-        }
+    public onOpenFormAdd(): void {
+        this.editMode = false;
+        this.userForm.reset();
+        this.showFormDialog = true;
+    }
 
+    public async onSubmitFormUser(): Promise<void> {
+        if (this.userForm.invalid) {
+            return this.formService.validateFormFields(this.userForm);
+        }
         this.isRefreshUsers = true;
-        const formData = this.userService.createUserFormDate(null, this.userForm.value, this.profileImage);
+        let action;
         try {
-            const res = await firstValueFrom(this.userService.addUser(formData));
+            if (this.editMode) {
+                const formData = this.userService.createUserFormDate(this.currentUsername,
+                    this.userForm.value, this.profileImage);
+                await firstValueFrom(this.userService.updateUser(formData));
+                action = 'updated';
+            } else {
+                const formData = this.userService.createUserFormDate( null,
+                    this.userForm.value, this.profileImage)
+                await firstValueFrom(this.userService.addUser(formData));
+                action = 'created';
+            }
+
             await this.getUsers(false);
             this.profileImage = null;
             this.userForm.reset();
-            this.messageService.add({
-                severity: 'success',
-                summary: 'Success',
-                detail: 'User added successfully'
-            });
+            this.showFormDialog = false;
+            this.messageHelperService.showToast('success', 'Success', `User ${{action}} successfully`);
         } catch (error) {
-            this.messageService.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: error.error.message
-            });
+            this.messageHelperService.showToast('error', 'Error', error.error.message);
             this.isRefreshUsers = false;
             this.profileImage = null;
         }
+    }
+
+    public onOpenFormEdit(user: User): void {
+        this.userForm.reset();
+        this.currentUsername = user.username;
+        this.editMode = true;
+        this.userForm.patchValue(user);
+        this.showFormDialog = true;
     }
 
     public searchUsers(searchTerm: string): void {

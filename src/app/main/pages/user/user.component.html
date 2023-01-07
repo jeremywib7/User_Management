@@ -5,7 +5,7 @@
             <p-toolbar styleClass="mb-4 gap-2">
                 <ng-template pTemplate="left">
                     <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2"
-                            (click)="showFormDialog = true"></button>
+                            (click)="onOpenFormAdd()"></button>
                     <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger"
                             (click)="deleteSelectedProducts()"
                             [disabled]="!selectedUsers || !selectedUsers.length"></button>
@@ -15,7 +15,8 @@
                     <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import"
                                   chooseLabel="Import"
                                   class="mr-2 inline-block"></p-fileUpload>
-                    <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"></button>
+                    <button pButton pRipple label="Export" icon="pi pi-upload"
+                            (click)="dt.exportCSV({selectionOnly:true})" class="p-button-help"></button>
                 </ng-template>
             </p-toolbar>
             <p-table #dt [value]="users" [rows]="10" [paginator]="true" [loading]="isRefreshUsers"
@@ -35,7 +36,6 @@
                 <!--                     placeholder="Search..."/>-->
             </span>
                             <button type="button" pButton pRipple icon="pi pi-refresh"
-                                    (click)="dt.exportCSV({selectionOnly:true})"
                                     class="p-button-info ml-auto" pTooltip="Refresh Users"
                                     tooltipPosition="bottom"></button>
                         </div>
@@ -64,8 +64,8 @@
                         <th pSortableColumn="email">Email
                             <p-sortIcon field="email"></p-sortIcon>
                         </th>
-                        <th pSortableColumn="isActive">Status
-                            <p-sortIcon field="isActive"></p-sortIcon>
+                        <th pSortableColumn="active">Status
+                            <p-sortIcon field="active"></p-sortIcon>
                         </th>
                         <th></th>
                     </tr>
@@ -86,9 +86,9 @@
                         <td style="min-width: 10rem">{{user.email}}</td>
                         <td style="min-width: 10rem">
                             <div>
-                                <p-tag [hidden]="!user.isActive" severity="success" value="Active"
+                                <p-tag [hidden]="!user.active" severity="success" value="Active"
                                        [rounded]="true"></p-tag>
-                                <p-tag [hidden]="user.isActive" severity="danger" value="Inactive"
+                                <p-tag [hidden]="user.active" severity="danger" value="Inactive"
                                        [rounded]="true"></p-tag>
                             </div>
                         </td>
@@ -96,7 +96,7 @@
                             <div class="flex">
                                 <button pButton pRipple (click)="onSelectUser(user)" icon="pi pi-user"
                                         class="p-button-rounded mr-2"></button>
-                                <button pButton pRipple icon="pi pi-pencil"
+                                <button pButton pRipple (click)="onOpenFormEdit(user)" icon="pi pi-pencil"
                                         class="p-button-rounded p-button-success mr-2"></button>
                                 <button pButton pRipple icon="pi pi-trash"
                                         class="p-button-rounded p-button-warning"></button>
@@ -185,13 +185,13 @@
                     </div>
                 </div>
                 <div class="field col-12">
-                    <label for="isActive">Status</label>
-                    <p-dropdown id="isActive" [options]="actives" [showClear]="true"
-                                appendTo="body" formControlName="isActive" placeholder="Select a Status">
+                    <label for="active">Status</label>
+                    <p-dropdown id="active" [options]="actives" [showClear]="true"
+                                appendTo="body" formControlName="active" placeholder="Select a Status">
                         <ng-template pTemplate="selectedItem">
               <span
-                  [class]="setSelectedDropdownStatus(this.userForm.value['isActive'], true)">
-                {{setSelectedDropdownStatus(this.userForm.value["isActive"], false)}}
+                  [class]="setSelectedDropdownStatus(this.userForm.value['active'], true)">
+                {{setSelectedDropdownStatus(this.userForm.value["active"], false)}}
                                     </span>
                         </ng-template>
                         <ng-template let-status pTemplate="status">
@@ -213,12 +213,12 @@
     <ng-template pTemplate="footer">
         <button pButton pRipple (click)="showFormDialog = false" label="Cancel" icon="pi pi-times"
                 class="p-button-text"></button>
-        <button pButton pRipple (click)="onAddNewUser()" [loading]="isRefreshUsers" label="Save" icon="pi pi-check"
+        <button pButton pRipple (click)="onSubmitFormUser()" [loading]="isRefreshUsers" label="Save" icon="pi pi-check"
                 class="p-button-text"></button>
     </ng-template>
 
 </p-dialog>
-<p-dialog [(visible)]="showInfoDialog" [style]="{width: '850px'}" header="User Details" [modal]="true"
+<p-dialog [(visible)]="showInfoDialog" [style]="{width: '850px'}" [header]="'User Details'" [modal]="true"
           styleClass="p-fluid">
     <ng-template pTemplate="content">
         <div class="surface-section px-6 py-5">
@@ -237,9 +237,9 @@
                             <div class="mr-5 mt-3">
                                 <span class="font-medium text-500">Status</span>
                                 <div class="mt-2">
-                                    <p-tag [hidden]="!selectedUser?.isActive" severity="success" value="Active"
+                                    <p-tag [hidden]="!selectedUser?.active" severity="success" value="Active"
                                            [rounded]="true"></p-tag>
-                                    <p-tag [hidden]="selectedUser?.isActive" severity="danger" value="Inactive"
+                                    <p-tag [hidden]="selectedUser?.active" severity="danger" value="Inactive"
                                            [rounded]="true"></p-tag>
                                 </div>
                             </div>
@@ -286,9 +286,9 @@
                         <div class="text-500 w-full md:w-3 font-medium">
                             <i class="pi pi-key mr-2"></i>Status
                         </div>
-                        <div [hidden]="!selectedUser?.isActive" class="text-900 w-full md:w-9">Account Unlocked <i
+                        <div [hidden]="!selectedUser?.notLocked" class="text-900 w-full md:w-9">Account Unlocked <i
                             class="pi pi-unlock ml-2 text-green-500"></i></div>
-                        <div [hidden]="selectedUser?.isActive" class="text-900 w-full md:w-9">Account Locked <i
+                        <div [hidden]="selectedUser?.notLocked" class="text-900 w-full md:w-9">Account Locked <i
                             class="pi pi-lock ml-2 text-red-500"></i></div>
                     </li>
                 </ul>
